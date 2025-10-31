@@ -8,33 +8,33 @@
   
   <style>
     :root {
-      --bg: #faf9f7;
-      --bg-gradient-start: #f8f8f8;
-      --bg-gradient-end: #e8f5e9;
-      --text: #1a1a1a;
-      --text-muted: #6b6b6b;
-      --accent: #2e7d32;
-      --accent-dark: #1b5e20;
-      --accent-light: #4caf50;
-      --border: #e0e0e0;
-      --diploma-bg: #f5f1e8;
-      --diploma-edge: #d4c5a0;
-      --card-bg: #ffffff;
-      --card-shadow: rgba(0, 0, 0, 0.1);
+      --bg: #0a0a0f;
+      --bg-gradient-start: #0f0f1a;
+      --bg-gradient-end: #1a1520;
+      --text: #f5f5f5;
+      --text-muted: #b8b8b8;
+      --accent: #ffd700;
+      --accent-dark: #d4af37;
+      --accent-light: #ffe44d;
+      --border: #2a2a35;
+      --diploma-bg: #1a1520;
+      --diploma-edge: #d4af37;
+      --card-bg: #15151f;
+      --card-shadow: rgba(255, 215, 0, 0.15);
       transition: background-color 0.4s ease, color 0.4s ease;
     }
 
-    html[data-theme="dark"] {
-      --bg: #1a1a1a;
-      --bg-gradient-start: #222222;
-      --bg-gradient-end: #1b2e1b;
-      --text: #f0f0f0;
-      --text-muted: #9e9e9e;
-      --border: #333333;
-      --diploma-bg: #2b2520;
-      --diploma-edge: #3d3328;
-      --card-bg: #1a202c;
-      --card-shadow: rgba(0, 0, 0, 0.3);
+    html[data-theme="light"] {
+      --bg: #faf8f0;
+      --bg-gradient-start: #fffef8;
+      --bg-gradient-end: #fff9e6;
+      --text: #1a1a1a;
+      --text-muted: #6b6b6b;
+      --border: #e8e0c8;
+      --diploma-bg: #fffef8;
+      --diploma-edge: #d4af37;
+      --card-bg: #ffffff;
+      --card-shadow: rgba(212, 175, 55, 0.2);
     }
 
     * {
@@ -66,6 +66,7 @@
       pointer-events: none;
       z-index: 10001;
       transition: opacity 0.2s ease;
+      box-shadow: 0 0 10px var(--accent);
     }
 
     #cursor-outline {
@@ -82,7 +83,7 @@
 
     body.cursor-hover #cursor-outline {
       transform: translate(-50%, -50%) scale(1.5);
-      background-color: rgba(46, 125, 50, 0.2);
+      background-color: rgba(255, 215, 0, 0.2);
     }
 
     body.cursor-hover #cursor-dot {
@@ -108,9 +109,7 @@
 
     body {
       font-family: "Inter", sans-serif;
-      background-image: radial-gradient(circle at 10% 10%, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-      background-size: 200% 200%;
-      animation: gradientShift 15s ease infinite alternate;
+      background: var(--bg);
       color: var(--text);
       line-height: 1.6;
       overflow-x: hidden;
@@ -118,23 +117,65 @@
       position: relative;
     }
 
-    @keyframes gradientShift {
+    .stars-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent-light);
+      animation: twinkle 3s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+      0%, 100% {
+        opacity: 0.3;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+    }
+
+    .shooting-star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: var(--accent-light);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-light), 0 0 20px var(--accent);
+      animation: shoot 3s linear infinite;
+    }
+
+    @keyframes shoot {
       0% {
-        background-position: 0% 0%;
+        transform: translateX(0) translateY(0);
+        opacity: 1;
       }
       100% {
-        background-position: 100% 100%;
+        transform: translateX(-300px) translateY(300px);
+        opacity: 0;
       }
     }
 
     .particle {
       position: absolute;
-      background-color: rgba(46, 125, 50, 0.3);
+      background: radial-gradient(circle, var(--accent-light), transparent);
       border-radius: 50%;
       pointer-events: none;
       opacity: 0;
       animation: particleAnimation 15s infinite ease-in-out;
-      box-shadow: 0 0 8px rgba(46, 125, 50, 0.5), 0 0 15px rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 15px var(--accent);
     }
 
     @keyframes particleAnimation {
@@ -144,11 +185,11 @@
       }
       20% {
         transform: translateY(-20vh) scale(1);
-        opacity: 0.8;
+        opacity: 0.6;
       }
       80% {
         transform: translateY(80vh) scale(0.5);
-        opacity: 0.4;
+        opacity: 0.3;
       }
       100% {
         transform: translateY(100vh) scale(0);
@@ -156,7 +197,6 @@
       }
     }
 
-    /* Replaced envelope with diploma design */
     #diploma-wrapper {
       position: fixed;
       top: 0;
@@ -174,17 +214,18 @@
     }
 
     .click-indicator {
-      color: var(--accent-dark);
+      color: var(--accent);
       font-family: "Playfair Display", serif;
       font-size: 1.4rem;
       font-weight: 600;
       margin-bottom: 25px;
       text-align: center;
-      background-image: linear-gradient(-75deg, var(--text) 30%, var(--accent) 50%, var(--text) 70%);
+      background-image: linear-gradient(-75deg, var(--accent-light) 30%, var(--accent) 50%, var(--accent-dark) 70%);
       background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: shimmer 3s infinite linear;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
     }
 
     .click-indicator::after {
@@ -228,12 +269,12 @@
       position: relative;
       width: 350px;
       height: 250px;
-      background: linear-gradient(to bottom, var(--diploma-bg), var(--diploma-edge));
+      background: linear-gradient(135deg, var(--diploma-bg), #1f1a25);
       border-radius: 8px;
       box-shadow: 
-        0 10px 40px rgba(0, 0, 0, 0.2),
-        inset 0 2px 10px rgba(255, 255, 255, 0.3),
-        inset 0 -2px 10px rgba(0, 0, 0, 0.1);
+        0 10px 40px rgba(255, 215, 0, 0.3),
+        inset 0 2px 10px rgba(255, 215, 0, 0.1),
+        0 0 30px rgba(255, 215, 0, 0.2);
       transform-style: preserve-3d;
       transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
       animation: floatDiploma 3s ease-in-out infinite;
@@ -262,9 +303,9 @@
     .ribbon-top {
       width: 80px;
       height: 80px;
-      background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
       border-radius: 50%;
-      box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4);
+      box-shadow: 0 4px 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -275,11 +316,11 @@
     @keyframes pulse {
       0%, 100% {
         transform: scale(1);
-        box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4);
+        box-shadow: 0 4px 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4);
       }
       50% {
         transform: scale(1.05);
-        box-shadow: 0 6px 25px rgba(46, 125, 50, 0.6);
+        box-shadow: 0 6px 30px rgba(255, 215, 0, 0.8), 0 0 60px rgba(255, 215, 0, 0.6);
       }
     }
 
@@ -331,9 +372,9 @@
       font-family: "Playfair Display", serif;
       font-size: 1.8rem;
       font-weight: 700;
-      color: var(--accent-dark);
+      color: var(--accent);
       margin-bottom: 0.5rem;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
     }
 
     .diploma-subtitle {
@@ -346,7 +387,9 @@
     .diploma-ornament {
       position: absolute;
       font-size: 2rem;
-      opacity: 0.3;
+      opacity: 0.5;
+      color: var(--accent);
+      text-shadow: 0 0 10px var(--accent);
     }
 
     .diploma-ornament.top-left {
@@ -383,11 +426,10 @@
       transform: translateY(-10px) rotateY(-5deg);
       animation-play-state: paused;
       box-shadow: 
-        0 15px 50px rgba(0, 0, 0, 0.3),
-        inset 0 2px 10px rgba(255, 255, 255, 0.3),
-        inset 0 -2px 10px rgba(0, 0, 0, 0.1);
+        0 15px 50px rgba(255, 215, 0, 0.4),
+        inset 0 2px 10px rgba(255, 215, 0, 0.2),
+        0 0 50px rgba(255, 215, 0, 0.3);
     }
-
 
     .gala-container {
       width: 100%;
@@ -397,6 +439,8 @@
       opacity: 0;
       transform: translateY(30px);
       transition: all 0.8s ease-out 1.5s;
+      position: relative;
+      z-index: 1;
     }
 
     .gala-container.visible {
@@ -416,7 +460,7 @@
       margin: 0 auto 1.5rem;
       border-radius: 50%;
       object-fit: cover;
-      box-shadow: 0 8px 25px var(--card-shadow);
+      box-shadow: 0 8px 30px rgba(255, 215, 0, 0.4), 0 0 50px rgba(255, 215, 0, 0.2);
       border: 5px solid var(--accent);
       display: block;
     }
@@ -428,6 +472,7 @@
       color: var(--text);
       margin-bottom: 0.5rem;
       line-height: 1.2;
+      text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
     }
 
     .gala-subtitle {
@@ -443,13 +488,15 @@
       height: 3px;
       background: linear-gradient(90deg, transparent, var(--accent), transparent);
       margin: 0 auto;
+      box-shadow: 0 0 10px var(--accent);
     }
 
     .graduation-ornament {
       text-align: center;
       font-size: 3rem;
       margin: 2rem 0;
-      opacity: 0.8;
+      opacity: 0;
+      display: none;
     }
 
     .content-section {
@@ -472,7 +519,7 @@
       background: var(--card-bg);
       border-radius: 20px;
       padding: 2.5rem;
-      box-shadow: 0 10px 40px var(--card-shadow);
+      box-shadow: 0 10px 40px var(--card-shadow), 0 0 30px rgba(255, 215, 0, 0.1);
       border: 1px solid var(--border);
       margin-bottom: 2rem;
     }
@@ -483,6 +530,7 @@
       color: var(--text);
       margin-bottom: 1.5rem;
       text-align: center;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
     }
 
     .section-text {
@@ -495,11 +543,12 @@
     }
 
     .highlight-box {
-      background: linear-gradient(135deg, rgba(46, 125, 50, 0.1), rgba(46, 125, 50, 0.05));
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05));
       border-left: 4px solid var(--accent);
       border-radius: 12px;
       padding: 1.5rem;
       margin-top: 2rem;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
     }
 
     .highlight-text {
@@ -510,8 +559,9 @@
     }
 
     .highlight-text strong {
-      color: var(--accent-dark);
+      color: var(--accent);
       font-weight: 700;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
     }
 
     .details-grid {
@@ -527,19 +577,20 @@
       padding: 2rem 1.5rem;
       text-align: center;
       border: 1px solid var(--border);
-      box-shadow: 0 4px 20px var(--card-shadow);
+      box-shadow: 0 4px 20px var(--card-shadow), 0 0 20px rgba(255, 215, 0, 0.05);
       transition: all 0.3s ease;
     }
 
     .detail-item:hover {
       transform: translateY(-8px);
-      box-shadow: 0 8px 30px var(--card-shadow);
+      box-shadow: 0 8px 30px var(--card-shadow), 0 0 40px rgba(255, 215, 0, 0.2);
       border-color: var(--accent-light);
     }
 
     .detail-icon {
       font-size: 3rem;
       margin-bottom: 1rem;
+      display: none;
     }
 
     .detail-item h3 {
@@ -547,14 +598,15 @@
       font-size: 0.85rem;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: var(--text-muted);
+      color: var(--accent);
       margin-bottom: 0.75rem;
+      font-weight: 600;
     }
 
     .detail-item p {
       font-family: "Playfair Display", serif;
       font-size: 1.3rem;
-      color: var(--accent-dark);
+      color: var(--text);
       font-weight: 600;
       line-height: 1.4;
     }
@@ -562,10 +614,11 @@
     .location-name {
       font-family: "Playfair Display", serif;
       font-size: 1.8rem;
-      color: var(--accent-dark);
+      color: var(--accent);
       font-weight: 700;
       margin-bottom: 0.5rem;
       text-align: center;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
     }
 
     .location-address {
@@ -578,8 +631,9 @@
     .map-wrapper {
       border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 4px 20px var(--card-shadow);
+      box-shadow: 0 4px 20px var(--card-shadow), 0 0 30px rgba(255, 215, 0, 0.1);
       margin-top: 2rem;
+      border: 2px solid var(--border);
     }
 
     .map-wrapper iframe {
@@ -596,6 +650,8 @@
       width: 100%;
       opacity: 0;
       transition: all 0.8s ease-out 1.5s;
+      position: relative;
+      z-index: 1;
     }
 
     footer.visible {
@@ -608,7 +664,7 @@
       height: 100px;
       border-radius: 50%;
       object-fit: cover;
-      box-shadow: 0 0 20px rgba(46, 125, 50, 0.4);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
       margin-bottom: 1rem;
     }
 
@@ -622,14 +678,14 @@
       position: fixed;
       bottom: 1.5rem;
       background: var(--accent);
-      color: white;
+      color: #0a0a0f;
       width: 55px;
       height: 55px;
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4), 0 0 30px rgba(255, 215, 0, 0.3);
       transition: all 0.5s ease;
       z-index: 990;
       opacity: 0;
@@ -656,6 +712,7 @@
     .theme-toggle:hover {
       background: var(--accent-dark);
       transform: scale(1.1) translateY(0);
+      box-shadow: 0 6px 30px rgba(255, 215, 0, 0.6), 0 0 50px rgba(255, 215, 0, 0.5);
     }
 
     .music-control svg,
@@ -682,13 +739,13 @@
     .graduation-badge {
       display: inline-block;
       background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-      color: white;
+      color: #0a0a0f;
       padding: 0.5rem 1.5rem;
       border-radius: 50px;
       font-weight: 600;
       font-size: 0.9rem;
       margin-top: 1rem;
-      box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+      box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4);
     }
 
     .section-divider {
@@ -705,6 +762,7 @@
       width: 30%;
       height: 2px;
       background: linear-gradient(to right, transparent, var(--accent), transparent);
+      box-shadow: 0 0 10px var(--accent);
     }
 
     .section-divider::before {
@@ -717,7 +775,7 @@
 
     .section-divider-icon {
       font-size: 2rem;
-      display: inline-block;
+      display: none;
       padding: 0 1rem;
       background: var(--bg);
     }
@@ -817,6 +875,8 @@
 </head>
 <body>
 
+  <div class="stars-container" id="starsContainer"></div>
+
   <div class="particle" style="width:10px; height:10px; left: 10%; animation-delay: 0s;"></div>
   <div class="particle" style="width:15px; height:15px; left: 30%; animation-delay: 2s;"></div>
   <div class="particle" style="width:12px; height:12px; left: 50%; animation-delay: 4s;"></div>
@@ -828,7 +888,6 @@
   <div class="particle" style="width:7px; height:7px; left: 80%; animation-delay: 1s;"></div>
   <div class="particle" style="width:16px; height:16px; left: 25%; animation-delay: 3s;"></div>
 
-  <!-- Replaced envelope with diploma design -->
   <div id="diploma-wrapper">
     <div class="click-indicator">Pulsa para descubrir tu logro</div>
     <div class="diploma-container">
@@ -844,7 +903,7 @@
         </div>
         
         <div class="diploma-ribbon">
-          <div class="ribbon-top">🎓</div>
+          <div class="ribbon-top">★</div>
           <div class="ribbon-tails">
             <div class="ribbon-tail"></div>
             <div class="ribbon-tail"></div>
@@ -866,13 +925,11 @@
            class="gala-logo">
       <h1 class="gala-title">Clausura Tercero Básico</h1>
       <p class="gala-subtitle">Instituto ICAT Coatepeque</p>
-      <div class="graduation-badge">🎓 Promoción 2025</div>
+      <div class="graduation-badge">Promoción 2025</div>
       <div class="decorative-line"></div>
     </header>
 
     <main class="gala-content">
-      
-      <div class="graduation-ornament">🎓 ✨ 🎓</div>
 
       <section class="content-section">
         <div class="content-card">
@@ -900,31 +957,30 @@
       </section>
 
       <div class="section-divider">
-        <span class="section-divider-icon">📚</span>
+        <span class="section-divider-icon"></span>
       </div>
 
-      <!-- Updated event details with new date, time, and location -->
       <section class="content-section">
         <div class="content-card">
           <h2 class="section-title">Detalles del Evento</h2>
           <div class="details-grid">
             <div class="detail-item">
-              <div class="detail-icon">📅</div>
+              <div class="detail-icon"></div>
               <h3>Fecha</h3>
               <p>Viernes<br>15 de Noviembre 2025</p>
             </div>
             <div class="detail-item">
-              <div class="detail-icon">⏰</div>
+              <div class="detail-icon"></div>
               <h3>Horario</h3>
               <p>8:00 AM</p>
             </div>
             <div class="detail-item">
-              <div class="detail-icon">📍</div>
+              <div class="detail-icon"></div>
               <h3>Lugar</h3>
               <p>Salón<br>Dulces Eventos</p>
             </div>
             <div class="detail-item">
-              <div class="detail-icon">👔</div>
+              <div class="detail-icon"></div>
               <h3>Vestimenta</h3>
               <p>Formal<br>Elegante</p>
             </div>
@@ -933,10 +989,9 @@
       </section>
 
       <div class="section-divider">
-        <span class="section-divider-icon">🎖️</span>
+        <span class="section-divider-icon"></span>
       </div>
 
-      <!-- Updated Google Maps location with new URL -->
       <section class="content-section">
         <div class="content-card">
           <h2 class="section-title">Ubicación</h2>
@@ -956,8 +1011,6 @@
         </div>
       </section>
 
-      <div class="graduation-ornament">🌟 🎓 🌟</div>
-
     </main>
   </div>
 
@@ -970,9 +1023,8 @@
     </div>
   </footer>
 
-  <!-- Updated music source to Pomp and Circumstance from Spotify -->
   <audio id="backgroundMusic" loop>
-    <source src="https://p.scdn.co/mp3-preview/e8a4e3e3e3e3e3e3e3e3e3e3e3e3e3e3e3e3e3e3" type="audio/mpeg">
+    <source src="https://raw.githubusercontent.com/JinSeokYoonG/CLAUSURA/main/Coldplay%20-%20Yellow%20(Official%20Video)%20-%20Coldplay.mp3" type="audio/mpeg">
   </audio>
 
   <div class="music-control" id="musicControl" title="Silenciar/Activar música">
@@ -986,6 +1038,39 @@
   </div>
 
   <script>
+    function createStars() {
+      const starsContainer = document.getElementById('starsContainer');
+      const starCount = 150;
+      
+      for (let i = 0; i < starCount; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        
+        const size = Math.random() * 3 + 1;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        
+        starsContainer.appendChild(star);
+      }
+      
+      for (let i = 0; i < 5; i++) {
+        const shootingStar = document.createElement('div');
+        shootingStar.className = 'shooting-star';
+        shootingStar.style.left = Math.random() * 100 + '%';
+        shootingStar.style.top = Math.random() * 50 + '%';
+        shootingStar.style.animationDelay = Math.random() * 5 + 's';
+        shootingStar.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        
+        starsContainer.appendChild(shootingStar);
+      }
+    }
+    
+    createStars();
+
     const diplomaWrapper = document.getElementById("diploma-wrapper");
     const galaContainer = document.getElementById("gala-container");
     const footer = document.getElementById("footer");
@@ -1039,23 +1124,23 @@
     const waveOverlay = document.getElementById("wave-overlay");
 
     function applyTheme(theme) {
-      if (theme === "dark") {
-        document.documentElement.setAttribute("data-theme", "dark");
+      if (theme === "light") {
+        document.documentElement.setAttribute("data-theme", "light");
         sunIcon.style.display = "none";
         moonIcon.style.display = "block";
-        localStorage.setItem("theme", "dark");
+        localStorage.setItem("theme", "light");
       } else {
-        document.documentElement.setAttribute("data-theme", "light");
+        document.documentElement.setAttribute("data-theme", "dark");
         sunIcon.style.display = "block";
         moonIcon.style.display = "none";
-        localStorage.setItem("theme", "light");
+        localStorage.setItem("theme", "dark");
       }
     }
 
     themeToggle.addEventListener("click", (e) => {
-      const currentTheme = document.documentElement.getAttribute("data-theme") || (prefersDark.matches ? "dark" : "light");
+      const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
       const newTheme = currentTheme === "dark" ? "light" : "dark";
-      const targetBg = newTheme === "dark" ? "#1a1a1a" : "#faf9f7";
+      const targetBg = newTheme === "dark" ? "#0a0a0f" : "#faf8f0";
 
       waveOverlay.style.backgroundColor = targetBg;
       waveOverlay.style.top = e.clientY - 0.5 + "px";
@@ -1092,7 +1177,7 @@
     if (savedTheme) {
       applyTheme(savedTheme);
     } else {
-      applyTheme(prefersDark.matches ? "dark" : "light");
+      applyTheme("dark");
     }
     prefersDark.addEventListener("change", (e) => {
       if (!localStorage.getItem("theme")) {
