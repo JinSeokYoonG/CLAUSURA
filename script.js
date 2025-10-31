@@ -1,82 +1,234 @@
-// === CONTROL DE MÚSICA ===
-const playBtn = document.getElementById('play-btn');
-const audio = document.getElementById('bg-music');
+function createStars() {
+  const starsContainer = document.getElementById("starsContainer")
+  const starCount = 150
 
-playBtn.addEventListener('click', () => {
-  if (audio.paused) {
-    audio.play();
-    playBtn.textContent = "⏸️ Pausar música";
-  } else {
-    audio.pause();
-    playBtn.textContent = "▶️ Reproducir música";
-  }
-});
+  for (let i = 0; i < starCount; i++) {
+    const star = document.createElement("div")
+    star.className = "star"
 
-// === CONTADOR REGRESIVO ===
-const countdown = document.getElementById('countdown');
+    const size = Math.random() * 3 + 1
+    star.style.width = size + "px"
+    star.style.height = size + "px"
+    star.style.left = Math.random() * 100 + "%"
+    star.style.top = Math.random() * 100 + "%"
+    star.style.animationDelay = Math.random() * 3 + "s"
+    star.style.animationDuration = Math.random() * 2 + 2 + "s"
 
-// Fecha del evento (26 de octubre 2025, 9:00 AM)
-const eventDate = new Date('October 26, 2025 09:00:00').getTime();
-
-function updateCountdown() {
-  const now = new Date().getTime();
-  const distance = eventDate - now;
-
-  if (distance <= 0) {
-    countdown.innerHTML = "🎉 ¡El evento ha comenzado! 🎉";
-    return;
+    starsContainer.appendChild(star)
   }
 
-  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  for (let i = 0; i < 5; i++) {
+    const shootingStar = document.createElement("div")
+    shootingStar.className = "shooting-star"
+    shootingStar.style.left = Math.random() * 100 + "%"
+    shootingStar.style.top = Math.random() * 50 + "%"
+    shootingStar.style.animationDelay = Math.random() * 5 + "s"
+    shootingStar.style.animationDuration = Math.random() * 2 + 2 + "s"
 
-  countdown.innerHTML = `
-    <div><span>${days}</span>d</div>
-    <div><span>${hours}</span>h</div>
-    <div><span>${minutes}</span>m</div>
-    <div><span>${seconds}</span>s</div>
-  `;
+    starsContainer.appendChild(shootingStar)
+  }
 }
 
-setInterval(updateCountdown, 1000);
+createStars()
 
-// === SCROLL SUAVE ENTRE SECCIONES ===
-document.querySelectorAll('a[href^="#"]').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    document.querySelector(link.getAttribute('href')).scrollIntoView({
-      behavior: 'smooth'
-    });
-  });
-});
+const diplomaWrapper = document.getElementById("diploma-wrapper")
+const galaContainer = document.getElementById("gala-container")
+const footer = document.getElementById("footer")
+const musicControl = document.getElementById("musicControl")
+const themeToggle = document.getElementById("themeToggle")
+const music = document.getElementById("backgroundMusic")
+const volumeUpIcon = document.getElementById("volumeUpIcon")
+const volumeOffIcon = document.getElementById("volumeOffIcon")
 
-// === ANIMACIONES AL HACER SCROLL ===
-const sections = document.querySelectorAll('.section');
+document.body.classList.add("waiting")
 
-window.addEventListener('scroll', () => {
-  const triggerBottom = window.innerHeight * 0.8;
-  sections.forEach(sec => {
-    const secTop = sec.getBoundingClientRect().top;
-    if (secTop < triggerBottom) {
-      sec.classList.add('show');
-    }
-  });
-});
+diplomaWrapper.addEventListener("click", () => {
+  document.body.classList.remove("waiting")
+  diplomaWrapper.classList.add("open")
+  document.body.style.overflowY = "auto"
+  if (galaContainer) galaContainer.classList.add("visible")
+  footer.classList.add("visible")
+  musicControl.classList.add("visible")
+  themeToggle.classList.add("visible")
 
-// === FORMULARIO DE CONFIRMACIÓN ===
-const confirmForm = document.getElementById('confirm-form');
-confirmForm.addEventListener('submit', e => {
-  e.preventDefault();
-  const name = document.getElementById('name').value.trim();
-  const attending = document.getElementById('attending').value;
+  music.play().catch((e) => console.error("La reproducción automática fue bloqueada."))
 
-  if (name === "") {
-    alert("Por favor ingresa tu nombre 😊");
-    return;
+  if (music.muted) {
+    volumeUpIcon.style.display = "none"
+    volumeOffIcon.style.display = "block"
+  } else {
+    volumeUpIcon.style.display = "block"
+    volumeOffIcon.style.display = "none"
   }
 
-  confirmForm.reset();
-  alert(`Gracias, ${name}. Tu confirmación (${attending}) ha sido registrada 🎉`);
-});
+  setTimeout(() => {
+    diplomaWrapper.style.display = "none"
+  }, 2000)
+})
+
+musicControl.addEventListener("click", () => {
+  if (music.muted) {
+    music.muted = false
+    volumeUpIcon.style.display = "block"
+    volumeOffIcon.style.display = "none"
+  } else {
+    music.muted = true
+    volumeUpIcon.style.display = "none"
+    volumeOffIcon.style.display = "block"
+  }
+})
+
+const sunIcon = document.getElementById("themeIconSun")
+const moonIcon = document.getElementById("themeIconMoon")
+const prefersDark = window.matchMedia("(prefers-color-scheme: dark)")
+const waveOverlay = document.getElementById("wave-overlay")
+
+function applyTheme(theme) {
+  if (theme === "light") {
+    document.documentElement.setAttribute("data-theme", "light")
+    sunIcon.style.display = "none"
+    moonIcon.style.display = "block"
+    localStorage.setItem("theme", "light")
+  } else {
+    document.documentElement.setAttribute("data-theme", "dark")
+    sunIcon.style.display = "block"
+    moonIcon.style.display = "none"
+    localStorage.setItem("theme", "dark")
+  }
+}
+
+themeToggle.addEventListener("click", (e) => {
+  const currentTheme = document.documentElement.getAttribute("data-theme") || "dark"
+  const newTheme = currentTheme === "dark" ? "light" : "dark"
+  const targetBg = newTheme === "dark" ? "#0a0a0f" : "#faf8f0"
+
+  waveOverlay.style.backgroundColor = targetBg
+  waveOverlay.style.top = e.clientY - 0.5 + "px"
+  waveOverlay.style.left = e.clientX - 0.5 + "px"
+  waveOverlay.style.transform = "scale(0)"
+  waveOverlay.style.transition = "transform 0s"
+
+  requestAnimationFrame(() => {
+    const viewportWidth = document.documentElement.clientWidth
+    const viewportHeight = document.documentElement.clientHeight
+    const maxDist = Math.max(
+      Math.hypot(e.clientX, e.clientY),
+      Math.hypot(viewportWidth - e.clientX, e.clientY),
+      Math.hypot(e.clientX, viewportHeight - e.clientY),
+      Math.hypot(viewportWidth - e.clientX, viewportHeight - e.clientY),
+    )
+    const scaleFactor = maxDist * 2
+
+    waveOverlay.style.transition = "transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)"
+    waveOverlay.style.transform = `scale(${scaleFactor})`
+
+    setTimeout(() => {
+      applyTheme(newTheme)
+    }, 600)
+
+    setTimeout(() => {
+      waveOverlay.style.transform = "scale(0)"
+      waveOverlay.style.transition = "transform 0s"
+    }, 750)
+  })
+})
+
+const savedTheme = localStorage.getItem("theme")
+if (savedTheme) {
+  applyTheme(savedTheme)
+} else {
+  applyTheme("dark")
+}
+prefersDark.addEventListener("change", (e) => {
+  if (!localStorage.getItem("theme")) {
+    applyTheme(e.matches ? "dark" : "light")
+  }
+})
+
+const dot = document.getElementById("cursor-dot")
+const outline = document.getElementById("cursor-outline")
+
+window.addEventListener("mousemove", (e) => {
+  dot.style.left = e.clientX + "px"
+  dot.style.top = e.clientY + "px"
+  outline.style.left = e.clientX + "px"
+  outline.style.top = e.clientY + "px"
+})
+
+setTimeout(() => {
+  const hoverElements = document.querySelectorAll(
+    "a, button, #diploma-wrapper, .music-control, .theme-toggle, .detail-item, .venue-image, .memory-item",
+  )
+
+  hoverElements.forEach((el) => {
+    el.addEventListener("mouseenter", () => {
+      document.body.classList.add("cursor-hover")
+    })
+    el.addEventListener("mouseleave", () => {
+      document.body.classList.remove("cursor-hover")
+    })
+  })
+}, 100)
+
+const observerOptions = {
+  threshold: 0.1,
+  rootMargin: "0px 0px -50px 0px",
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("animate-in")
+    }
+  })
+}, observerOptions)
+
+// Observe all content sections
+document.addEventListener("DOMContentLoaded", () => {
+  const sections = document.querySelectorAll(".content-section")
+  sections.forEach((section) => {
+    observer.observe(section)
+  })
+})
+
+function initLightbox() {
+  const lightbox = document.getElementById("lightbox")
+  const lightboxImg = document.getElementById("lightbox-img")
+  const lightboxClose = document.getElementById("lightbox-close")
+
+  // Add click handlers to all gallery images
+  const galleryImages = document.querySelectorAll(".venue-image img, .memory-item img")
+
+  galleryImages.forEach((img) => {
+    img.parentElement.addEventListener("click", () => {
+      lightbox.classList.add("active")
+      lightboxImg.src = img.src
+      document.body.style.overflow = "hidden"
+    })
+  })
+
+  // Close lightbox
+  lightboxClose.addEventListener("click", closeLightbox)
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) {
+      closeLightbox()
+    }
+  })
+
+  function closeLightbox() {
+    lightbox.classList.remove("active")
+    document.body.style.overflow = "auto"
+  }
+
+  // Close on escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && lightbox.classList.contains("active")) {
+      closeLightbox()
+    }
+  })
+}
+
+// Initialize lightbox after diploma opens
+setTimeout(() => {
+  initLightbox()
+}, 2500)
